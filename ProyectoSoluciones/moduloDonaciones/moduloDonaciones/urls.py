@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from moduloDonacionesApp.views import *
+from moduloDonacionesApp.views import renderFormDon
+from moduloDonacionesApp.views import renderFormUs
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
