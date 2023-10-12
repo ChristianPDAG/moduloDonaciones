@@ -1,0 +1,58 @@
+    element.style {
+    }
+    .CJF7A2 {
+    }
+    .CJF7A2, .U4Bvut {
+        position: relative;
+        width: 100%;
+    }
+    .CJF7A2 {
+        height: auto;
+    }
+    a, abbr, acronym, address, applet, b, big, blockquote, button, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, fieldset, font, footer, form, h1, h2, h3, h4, h5, h6, header, i, iframe, img, ins, kbd, label, legend, li, nav, object, ol, p, pre, q, s, samp, section, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, title, tr, tt, u, ul, var {
+        background: transparent;
+        border: 0;
+        margin: 0;
+        outline: 0;
+        padding: 0;
+        vertical-align: baseline;
+    }
+    user agent stylesheet
+    div {
+        display: block;
+    }
+    #SITE_HEADER {
+        --shc-mutated-brightness: 122,118,113;
+        position: fixed !important;
+        margin-top: var(--wix-ads-height);
+        top: 0;
+    }
+    #SITE_HEADER {
+        --bg: 244,236,225;
+        --shd: none;
+        --brwt: 0px;
+        --brd: var(--color_23);
+        --brwb: 0px;
+        --bgctr: 46,219,208;
+        --rd: 0px;
+        --alpha-bg: 1;
+        --alpha-bgctr: 0;
+        --alpha-brd: 0;
+        --boxShadowToggleOn-shd: none;
+    }
+    #SITE_HEADER {
+        z-index: 51;
+        --above-all-in-container: 10000;
+    }
+    #masterPage:not(.landingPage) {
+        --top-offset: var(--header-height);
+        --header-height: 110px;
+    }
+    #masterPage {
+        --pinned-layers-in-page: 0;
+    }
+    body {
+        --scrollbar-width: 0px;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 10px;
+    }
