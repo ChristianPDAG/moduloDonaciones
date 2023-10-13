@@ -14,14 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path , include
 from moduloDonacionesApp.views import renderFormDon
 from moduloDonacionesApp.views import renderFormUs
+from moduloDonacionesApp.views import addUs
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("formUsuario/", renderFormUs),
-    path("formDonacion/", renderFormDon)
+    path("formUsuario/", renderFormUs, name = 'Form_Usuarios'),
+    path("formDonacion/", renderFormDon),
+    path("formUsuario2/", addUs)
+
+
 
 ]
