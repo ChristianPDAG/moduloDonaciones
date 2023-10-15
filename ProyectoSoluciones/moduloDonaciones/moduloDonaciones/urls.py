@@ -15,16 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
-from moduloDonacionesApp.views import renderFormDon
 from moduloDonacionesApp.views import renderFormUs
 from moduloDonacionesApp.views import addUs
+from moduloDonacionesApp.views import addDon
+
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("formUsuario/", renderFormUs, name = 'Form_Usuarios'),
-    path("formDonacion/", renderFormDon),
-    path("formUsuario2/", addUs)
+    path("formUsuario2/", addUs),
+    path("formDonacion/<str:user_id>/", addDon, name = 'form_donaciones')
 
 
 
