@@ -8,14 +8,18 @@ class UserForm(forms.ModelForm):
         fields = '__all__'
 
     #Validación ingreso de correo para que no se caiga
-    def clean_email(self):
-        cleaned_data = super().clean()
-        correo = cleaned_data.get('correo')
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['idU'].required = True
+        self.fields['nombre'].required = True
+        self.fields['correo'].required = True
+        self.fields['correo'].error_messages = {
+            'required': 'Este campo es obligatorio',
+            'invalid': 'Correo inválido. Debe ingresar uno real'}
+        self.fields['nombre'].error_messages = {
+            'required': 'Este campo es obligatorio'
+        }
 
-        if correo and '@' not in correo:
-            raise forms.ValidationError("El correo debe contener @")
-        return correo
-    
 #Formulario Donaciones
 class DonForm(forms.ModelForm):
     class Meta:
