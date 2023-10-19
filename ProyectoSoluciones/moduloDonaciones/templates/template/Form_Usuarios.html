@@ -11,14 +11,106 @@
     <title>Document</title>
 </head>
 <body>
+    <table class="table"> <!-- tabla datos de usuario -->
+        <thead>
+            <tr>
+                <th >Id</th>
+                <th  >Nombre</th>
+                <th >Correo</th>
+                <th >Tipo de prenda</th>
+                <th >Talla</th>
+                <th >Estado</th>
+                <th >Detalle</th>
+                <th>Imagen</th>
+                <th>Aceptar/Rechazar</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                {% for donacion_key, donacion_value in user.donaciones.items %}
+                    <tr>
+                        {% if forloop.first %}
+                            <!-- Mostrar información del usuario solo en la primera fila de donaciones -->
+                            <td rowspan="{{ user.donaciones|length }}">{{ user.ID }}</td>
+                            <td rowspan="{{ user.donaciones|length }}">{{ user.nombre }}</td>
+                            <td rowspan="{{ user.donaciones|length }}">{{ user.correo }}</td>
+
+                        {% endif %}
+                        <td>{{ donacion_value.tipo_prenda|default:"Sin información" }}</td>
+                        <td>{{ donacion_value.talla|default:"Sin información" }}</td>
+                        <td>{{ donacion_value.estado|default:"Sin información" }}</td>
+                        <td>{{ donacion_value.detalle|default:"Sin información" }}</td>
+                        <td>
+                            <img src="{{ donacion_value.img }}" alt="Imagen" class="img-fluid" width="100">
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% if user.donaciones|length == 0 %}
+                    <!-- Si no hay donaciones, mostrar una fila con información del usuario -->
+                    <tr>
+                        <td>{{ user.ID }}</td>
+                        <td>{{ user.correo }}</td>
+                        <td colspan="4">Sin donaciones</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+  
     
+    
+    
+<!--    
+        <tbody>
+            {% for user in users %}
+                <tr>
+                        <td rowspan="4" scope="rowgroup">{{ user.ID }}
+                        <td rowspan="4" scope="rowgroup">{{ user.nombre }}</td>
+                        <td rowspan="4" scope="rowgroup">{{ user.correo }}</td>
+                </tr>
+                <tr>
+                    
+                            <tr>
+                                <td >{% if donacion_value.tipo_prenda %}{{ donacion_value.tipo_prenda }}{% else %}Sin información{% endif %}</td>
+                            
+                                <td >{% if donacion_value.talla %}{{ donacion_value.talla }}{% else %}Sin información{% endif %}</td>
+                            
+                                <td >{% if donacion_value.estado %}{{ donacion_value.estado }}{% else %}Sin información{% endif %}</td>
+                            
+                                <td>{% if donacion_value.detalle %}{{ donacion_value.detalle }}{% else %}Sin información{% endif %}</td>
+                            </tr>
+                                
+                            {% endfor %}
+                    
+                  
+                </tr>
+     
+        </tbody>
+    </table> tabla donaciones
+
+    <table class="table"> 
+        <thead>
+            <tr>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            
+            {% endfor %}
+
+</body>
+</html>
+    
+
     <form method="post" >
         {% csrf_token %}
         {{ form.as_p }}
         
         <input type="submit" class="btn btn-info" value="ENVIAR">
     </form>
-   <!-- <form action="" method = "POST">{% csrf_token %}
+    <form action="" method = "POST">{% csrf_token %}
         <div class="form-group row">
           <label for="ID">ID</label>
           <input type="text" class="form-control" name="id" id="id">
@@ -56,27 +148,4 @@
         </ul>
     </form>   -->
     
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Correo</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.ID }}
-                        <td>{{ user.nombre }}</td>
-                        <td>{{ user.correo }}</td>
-
-                    </td>
-                </tr>
-                {% endfor %}
-        </tbody>
-
-    </table>
-</body>
-</html>
+    

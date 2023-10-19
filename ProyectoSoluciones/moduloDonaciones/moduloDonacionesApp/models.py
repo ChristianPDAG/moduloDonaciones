@@ -18,6 +18,7 @@ class DonModel(models.Model):
     tipo_prenda = models.CharField(max_length=100)
     estado = models.CharField(max_length=100)
     talla = models.CharField(max_length=100)
-    detalle = models.CharField(max_length=100)
+    detalle = models.CharField(max_length=100, null="True")
+    img = models.ImageField(blank="True", null="True")
 
   
