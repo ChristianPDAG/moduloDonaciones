@@ -18,6 +18,7 @@ from django.urls import path , include
 from moduloDonacionesApp.views import renderFormUs
 from moduloDonacionesApp.views import addUs
 from moduloDonacionesApp.views import addDon
+from moduloDonacionesApp.views import renderNavbar
 
 
 
@@ -25,7 +26,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("formUsuario/", renderFormUs, name = 'Form_Usuarios'),
     path("formUsuario2/", addUs),
-    path("formDonacion/<str:user_id>/", addDon, name = 'form_donaciones')
+    path("formDonacion/<str:user_id>/", addDon, name = 'form_donaciones'),
+    path("navbar/", renderNavbar)
 
 
 

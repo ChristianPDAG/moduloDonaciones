@@ -8,6 +8,10 @@ from .forms import UserForm , DonForm
 from django import forms
 
 
+#Render Navbar
+def renderNavbar(request):
+    return render(request, 'template/donaciones.html')
+
 #Conexión a base de datos firebase
 def connectDB():
     if not firebase_admin._apps:
