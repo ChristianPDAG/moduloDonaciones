@@ -68,7 +68,7 @@
     
 
     <div class="container-form" style="margin-right: 400px; margin-left: 400px; margin-top: 30px;">
-        <form action="" method = "POST">{% csrf_token %}
+        <form action="" method = "POST" enctype="multipart/form-data">{% csrf_token %}
             <!-- {% if error_message %}
                     <div class="alert alert-danger">
                         {{ error_message }}
@@ -109,7 +109,7 @@
 
             <div class="form-group row">
                 <label for="img">Añadir imagen</label>
-                <input type="file" name="imagen" class="form-control" name="img" id="img" style="margin-bottom: 20px;">
+                <input type="file" class="form-control" name="img" id="img" style="margin-bottom: 20px;">
             </div>
         
             <button type="submit" class="btn btn-primary" >Guardar</button>

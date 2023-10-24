@@ -2,9 +2,10 @@ from django.shortcuts import render ,redirect
 
 from django.apps import apps
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials , storage
 from firebase_admin import db
-from .forms import UserForm , DonForm
+from .forms import UserForm 
+from .forms import DonForm
 from django import forms
 
 
@@ -17,13 +18,18 @@ def connectDB():
     if not firebase_admin._apps:
         cred = credentials.Certificate("../modulodonaciones-firebase-adminsdk-zvcs8-3e5c71d008.json")
         firebase_admin.initialize_app(cred, {
-            "databaseURL": "https://modulodonaciones-default-rtdb.firebaseio.com" 
+            "databaseURL": "https://modulodonaciones-default-rtdb.firebaseio.com",
+            "storageBucket": "modulodonaciones.appspot.com"
         })
+
     dbconn = db.reference("Data")
-    return dbconn
+    return dbconn 
 
-
-
+def urlCreate():
+    connectDB()
+    blob = connectDB.bucket.blob('static/img/boton.png')
+    download_url = blob.generate_signed_url()
+    return(download_url)
 
 #Listar usuarios en /formUsuario
 def renderFormUs(request):
@@ -138,15 +144,28 @@ def addDon(request, user_id):
             img = form_don.cleaned_data.get('img')
 
             connectDB()
-            user_ref = db.reference(f'Data/{user_id}')
 
             # Subir la imagen a Firebase Storage
             if img:
-                img_path = f'Data/{user_id}/donaciones/{tipo_prenda}_{estado}_{talla}_{detalle}.jpg'
-                storage.child(img_path).put(img)
-                img_url = storage.child(img_path).get_url(None)
+                img_path = f'{tipo_prenda}_{estado}_{talla}_{detalle}.jpg'
+                print(img_path)
+                bucket = storage.bucket()
+                blob = bucket.blob(img_path)
+                try:
+                    blob.upload_from_file(img, content_type='image/jpeg')
+                except Exception as e:
+                    print(f"Error al cargar el archivo en Firebase Storage: {e}")
+            else:
+                img_path = None
+
+
+            # Convierte la ruta del archivo en la URL de la imagen
+            if img_path:
+                img_url = f'https://firebasestorage.googleapis.com/v0/b/modulodonaciones.appspot.com/o/{img_path}?alt=media'
             else:
                 img_url = None
+
+            user_ref = db.reference(f'Data/{user_id}')
 
             # Crear la nueva donación
             new_donation = user_ref.child('donaciones').push({
@@ -154,16 +173,13 @@ def addDon(request, user_id):
                 "estado": estado,
                 "talla": talla,
                 "detalle": detalle,
+                "img": img_path  # Almacena la ruta del archivo en Firebase Storage
             })
-
-            # Actualizar la URL de la imagen en la base de datos
-            new_donation.update({"img": img_url})
 
             return redirect('form_donaciones', user_id)
         else:
             # Manejar el caso donde el formulario no es válido
             return render(request, 'template/form_donacion.html', {'form_don': form_don})
-
         
 """
 def addDon(request, user_id):
