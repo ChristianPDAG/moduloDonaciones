@@ -173,7 +173,7 @@ def addDon(request, user_id):
                 "estado": estado,
                 "talla": talla,
                 "detalle": detalle,
-                "img": img_path  # Almacena la ruta del archivo en Firebase Storage
+                "img": img_url  # Almacena la ruta del archivo en Firebase Storage
             })
 
             return redirect('form_donaciones', user_id)
