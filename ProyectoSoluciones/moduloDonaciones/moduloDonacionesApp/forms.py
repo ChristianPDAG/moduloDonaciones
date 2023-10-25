@@ -10,8 +10,9 @@ class UserForm(forms.ModelForm):
     #Validación ingreso de correo para que no se caiga
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
-        self.fields['idU'].required = True
         self.fields['nombre'].required = True
+        self.fields['apellido'].required = True
+        self.fields['fono'].required = True
         self.fields['correo'].required = True
         self.fields['correo'].error_messages = {
             'required': 'Este campo es obligatorio',

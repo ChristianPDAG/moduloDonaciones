@@ -13,6 +13,19 @@ from django import forms
 def renderNavbar(request):
     return render(request, 'template/donaciones.html')
 
+def renderHistorial(request, user_id):
+    users = []
+    db_ref = connectDB()
+    user_data = db_ref.child(user_id).get()
+
+    user_info = {
+        "donaciones": user_data.get("donaciones", [])
+        }
+
+    users.append(user_info)
+
+    return render(request, 'template/historial.html', {"users": users})
+
 #Conexión a base de datos firebase
 def connectDB():
     if not firebase_admin._apps:
@@ -25,12 +38,6 @@ def connectDB():
     dbconn = db.reference("Data")
     return dbconn 
 
-def urlCreate():
-    connectDB()
-    blob = connectDB.bucket.blob('static/img/boton.png')
-    download_url = blob.generate_signed_url()
-    return(download_url)
-
 #Listar usuarios en /formUsuario
 def renderFormUs(request):
     users = []
@@ -40,9 +47,11 @@ def renderFormUs(request):
 
     for key, value in tblUsers.items():
         user_info = {
-            "ID": value.get("ID"),
+            "id":key,
             "nombre": value.get("nombre"),
+            "apellido": value.get("apellido"),
             "correo": value.get("correo"),
+            "fono": value.get("fono"),
             "donaciones": value.get("donaciones", [])
         }
 
@@ -50,54 +59,6 @@ def renderFormUs(request):
 
     return render(request, 'template/Form_Usuarios.html', {"users": users})
                   
-"""    users = []
-    donaciones = []
-    db_ref = connectDB()
-    
-    tblUsers = dbconn.get()
-  
-    for key, value in tblUsers.items():
-        users.append({"ID":value["ID"],
-                      "nombre":value["nombre"],
-                      "correo":value["correo"]})
-        
-    return render(request,'template/Form_Usuarios.html', {"users" : users})
-
-
-
-    # Obtener datos de usuarios desde Firebase
-    users_data = db_ref.child('usuarios').get()
-
-    for user_key, user_value in users_data.items():
-        user_info = {
-            "ID": user_value.get("ID"),
-            "nombre": user_value.get("nombre"),
-            "correo": user_value.get("correo"),
-        }
-
-        # Agregar información de donaciones si está disponible
-        donaciones_data = user_value.get("donaciones")
-        if donaciones_data:
-            user_info["donaciones"] = donaciones_data
-
-        users.append(user_info)
-
-    return render(request, 'template/Form_Usuarios.html', {"users": users})"""
-
-
-
-
-"""dbconn = connectDB()
-    tblUsers = dbconn.get()
-  
-    for key, value in tblUsers.items():
-        users.append({"ID":value["ID"],"nombre":value["nombre"],"correo":value["correo"]})
-    return render(request,'template/Form_Usuarios.html', {"users" : users})"""
-
-""" for key, value in tblUsers.items():
-        donaciones.append({"Talla":value["talla"],"tipo de prenda":value["tipo_prenda"],"Estado":value["estado"],"Detalle":value["detalle"]})  """  
-    
-
 
 #Añadir usuario en /formUsuario2
 def addUs(request):
@@ -109,12 +70,14 @@ def addUs(request):
         form = UserForm(request.POST)
         try:
             if form.is_valid():
-                idU = form.cleaned_data.get("idU")
                 nombre = form.cleaned_data.get("nombre")
+                apellido = form.cleaned_data.get("apellido")
                 correo = form.cleaned_data.get("correo")
+                fono = form.cleaned_data.get("fono")
+
 
                 dbconn = connectDB()
-                new_user = dbconn.push({"ID": idU, "nombre": nombre, "correo": correo, "donaciones": {}})
+                new_user = dbconn.push({"nombre": nombre,"apellido":apellido, "correo": correo,"fono":fono, "donaciones": {}})
                 
                 return redirect('form_donaciones', user_id=new_user.key)
         
@@ -145,9 +108,9 @@ def addDon(request, user_id):
 
             connectDB()
 
-            # Subir la imagen a Firebase Storage
+            #Subir la imagen a Firebase Storage
             if img:
-                img_path = f'{tipo_prenda}_{estado}_{talla}_{detalle}.jpg'
+                img_path = f'{user_id}_{tipo_prenda}_{estado}_{talla}_{detalle}.jpg'
                 print(img_path)
                 bucket = storage.bucket()
                 blob = bucket.blob(img_path)
@@ -159,7 +122,7 @@ def addDon(request, user_id):
                 img_path = None
 
 
-            # Convierte la ruta del archivo en la URL de la imagen
+            #Convierte la ruta del archivo en la url de la imagen
             if img_path:
                 img_url = f'https://firebasestorage.googleapis.com/v0/b/modulodonaciones.appspot.com/o/{img_path}?alt=media'
             else:
@@ -178,37 +141,7 @@ def addDon(request, user_id):
 
             return redirect('form_donaciones', user_id)
         else:
-            # Manejar el caso donde el formulario no es válido
             return render(request, 'template/form_donacion.html', {'form_don': form_don})
         
-"""
-def addDon(request, user_id):
-    if request.method == 'GET':
-        form_don = DonForm()
-        return render (request,'template/form_donacion.html',{'form': form_don })
-    if request.method == 'POST':
-        form_don = DonForm(request.POST, request.FILES)
-        if form_don.is_valid():
-            tipo_prenda = form_don.cleaned_data.get('tipo_prenda')
-            estado = form_don.cleaned_data.get('estado')
-            talla = form_don.cleaned_data.get('talla')
-            detalle = form_don.cleaned_data.get('detalle')
-            img = form_don.cleaned_data.get('img')
-            img_url = storage.child(f'Data/{user_id}/donaciones/{new_donation.key}/img').get_url(None)
 
-            connectDB()
-            user_ref = db.reference(f'Data/{user_id}')
-
-            new_donation = user_ref.child('donaciones').push({"tipo_prenda":tipo_prenda,"estado":estado,"talla":talla,"detalle":detalle,"img":img})
-            return redirect('form_donaciones' ,user_id)
-
-
-        else:
-            form_don = DonForm()
-
-        return render(request,'template/form_donacion.html',{'form_don':form_don})
-"""
-    
-
-        
     

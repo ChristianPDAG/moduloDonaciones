@@ -5,9 +5,11 @@ from django.db import models
 #Modelo formulario usuarios
 class UserModel(models.Model):
 
-    idU= models.IntegerField()
     nombre = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100)
     correo = models.EmailField()
+    fono = models.CharField(max_length=100)
+
 
    # ids.widget.attrs['class'] = ' form-control'
   #  nombre.widget.attrs['class'] = ' form-control'
