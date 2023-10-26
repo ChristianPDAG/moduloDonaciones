@@ -10,30 +10,30 @@
 	</script>
     <title>Document</title>
 </head>
-<body>
-    <table class="table"> <!-- tabla datos de usuario -->
+<body class="container mt-5">
+    <table class="table shadow p-3 mb-5 bg-body rounded"> <!-- tabla datos de usuario -->
         <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo</th>
-                <th>Fono</th>
-                <th>Opción</th>
+            <tr class="bg-dark text-white">
+                <th class="text-center border">Nombre</th>
+                <th class="text-center border">Apellido</th>
+                <th class="text-center border">Correo</th>
+                <th class="text-center border">Fono</th>
+                <th class="text-center border">Opción</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
                 {% for donacion_key, donacion_value in user.donaciones.items %}
-                    <tr>
+                    <tr class="bg-secondary text-white">
                         {% if forloop.first %}
                             <!-- Mostrar información del usuario solo en la primera fila de donaciones -->
-                            <td rowspan="{{ user.donaciones|length }}">{{ user.nombre }}</td>
-                            <td rowspan="{{ user.donaciones|length }}">{{ user.apellido }}</td>
-                            <td rowspan="{{ user.donaciones|length }}">{{ user.correo }}</td>
-                            <td rowspan="{{ user.donaciones|length }}">{{ user.fono }}</td>
+                            <td rowspan="{{ user.donaciones|length }}" class="border">{{ user.nombre }}</td>
+                            <td rowspan="{{ user.donaciones|length }}" class="border">{{ user.apellido }}</td>
+                            <td rowspan="{{ user.donaciones|length }}" class="border">{{ user.correo }}</td>
+                            <td rowspan="{{ user.donaciones|length }}" class="border">{{ user.fono }}</td>
                         
-                            <td>
-                                <a href="{% url 'ver_donaciones' user.id %}" class="btn btn-primary">Ver donaciones</a>
+                            <td class="text-center">
+                                <a href="{% url 'ver_donaciones' user.id %}" class="btn btn-outline-light " >Ver donaciones</a>
                             </td>
                         {% endif %}    
                     </tr>
@@ -42,6 +42,7 @@
             {% endfor %}
         </tbody>
     </table>
+</body>
   
     
     
