@@ -1,5 +1,5 @@
 from django.shortcuts import render ,redirect
-
+from django.contrib.auth.decorators import login_required
 from django.apps import apps
 import firebase_admin
 from firebase_admin import credentials , storage
@@ -7,6 +7,7 @@ from firebase_admin import db
 from .forms import UserForm 
 from .forms import DonForm
 from django import forms
+
 
 
 #Render Navbar
@@ -39,6 +40,7 @@ def connectDB():
     return dbconn 
 
 #Listar usuarios en /formUsuario
+@login_required
 def renderFormUs(request):
     users = []
     db_ref = connectDB()

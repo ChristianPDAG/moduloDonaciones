@@ -23,4 +23,3 @@ class DonModel(models.Model):
     detalle = models.CharField(max_length=100, null="True")
     img = models.ImageField(blank="True", null="True")
 
-  

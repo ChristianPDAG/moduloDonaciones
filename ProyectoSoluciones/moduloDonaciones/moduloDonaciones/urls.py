@@ -21,7 +21,6 @@ from moduloDonacionesApp.views import addDon
 from moduloDonacionesApp.views import renderNavbar , renderHistorial
 
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("formUsuario/", renderFormUs, name = 'Form_Usuarios'),
