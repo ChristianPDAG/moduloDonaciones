@@ -8,7 +8,7 @@
 	<script crossorigin="anonymous"
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" >
 	</script>
-    <title>Document</title>
+    <title>Historial</title>
 </head>
 <body class="container mt-5" >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -35,7 +35,9 @@
                 <th class="text-center border">Estado</th>
                 <th class="text-center border">Detalle</th>
                 <th class="text-center border">Imagen</th>
-                <th class="text-center border">Aceptar/Rechazar</th>
+                <th class="text-center border">Estado</th>
+                <th class="text-center border">Fecha</th>
+
 
             </tr>
         </thead>
@@ -53,10 +55,8 @@
                                 <img src="{{ donacion_value.img }}" alt="Imagen" class="img-fluid" width="30" height="30">
                             </a>
                         </td>
-                        <td class="border">
-                            <button class="btn btn-success" style="margin-left: 20%;">Aceptar</button>         
-                            <button class="btn btn-danger" style="margin-left: 20%;">Rechazar</button>    
-                        </td>
+                        <td class="border">{{ donacion_value.estado|default:"Sin información" }}</td>
+                        <td class="border">{{ donacion_value.fecha|default:"Sin información" }}</td>
                     </tr>
                     <!---Ventana Modal de bootstrap, muestra en grande la imagen al presionarla-->
                     <div class="modal fade" id="imagenModal{{ donacion_key }}" tabindex="-1" role="dialog" aria-labelledby="imagenModalLabel" aria-hidden="true">
@@ -73,12 +73,7 @@
                         </div>
                     </div>
                 {% endfor %}
-                {% if user.donaciones|length == 0 %}
-                    <!-- Si no hay donaciones -->
-                    <tr>
-                        <td colspan="4">Sin donaciones</td>
-                    </tr>
-                {% endif %}
+                
             {% endfor %}
         </tbody>
     </table>

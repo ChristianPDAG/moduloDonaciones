@@ -10,8 +10,26 @@
 	</script>
     <title>Document</title>
 </head>
-<body class="container mt-5">
-    <table class="table shadow p-3 mb-5 bg-body rounded"> <!-- tabla datos de usuario -->
+
+
+<body class="container mt-5" >
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="/../formUsuario/">Lista Usuarios</a>
+              <a class="nav-link active" href="/../historial_don/">Historial Donaciones</a>
+              <a class="nav-link" href="{% url 'admin:logout' %}">Cerrar Sesión</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <br>
+    <table class="table shadow-lg p-3 mb-5 bg-body rounded"> <!-- tabla datos de usuario -->
         <thead>
             <tr class="bg-dark text-white">
                 <th class="text-center border">Nombre</th>

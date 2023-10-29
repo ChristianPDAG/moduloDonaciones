@@ -93,7 +93,7 @@
         </div>
         <div class="form-group row">
             <label for="correo">Correo</label>
-            <input type="text" class="form-control" name="correo" id="correo" value="{{ user.correo}}">
+            <input type="text" class="form-control" name="correo" id="correo" value="{{ user.correo}}" placeholder="example@mail.com">
             {% if form.correo.errors %}
                 {% for error in form.correo.errors %}
                     <p style="color: red;">{{ error }}</p>

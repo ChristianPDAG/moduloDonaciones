@@ -7,6 +7,11 @@ from firebase_admin import db
 from .forms import UserForm 
 from .forms import DonForm
 from django import forms
+from datetime import date , datetime
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 
 
@@ -26,6 +31,22 @@ def renderHistorial(request, user_id):
     users.append(user_info)
 
     return render(request, 'template/historial.html', {"users": users})
+
+def renderHistorialGeneral(request):
+    users = []
+    db_ref = connectDB()
+    tblUsers = db_ref.get()
+
+    for key, value in tblUsers.items():
+        user_info = {
+            
+            "donaciones": value.get("donaciones", [])
+        }
+    
+
+    users.append(user_info)
+
+    return render(request, 'template/historial_general.html', {"users": users})
 
 #Conexión a base de datos firebase
 def connectDB():
@@ -94,6 +115,8 @@ def addUs(request):
 
 #formulario de donación, se asocia al usuario añadido anteriormente
 def addDon(request, user_id):
+    dt = datetime.now()
+    ddtt = dt.strftime('%d-%m-%Y')
     if request.method == 'GET':
         form_don = DonForm()
         return render(request, 'template/form_donacion.html', {'form_don': form_don })
@@ -138,7 +161,9 @@ def addDon(request, user_id):
                 "estado": estado,
                 "talla": talla,
                 "detalle": detalle,
-                "img": img_url  # Almacena la ruta del archivo en Firebase Storage
+                "img": img_url, # Almacena la ruta del archivo en Firebase Storage
+                "estado": "En proceso",
+                "fecha": ddtt  
             })
 
             return redirect('form_donaciones', user_id)
