@@ -40,7 +40,9 @@
         </nav>
     </div>
     <div class="container mt-5">
-        <table class="table shadow p-3 mb-5 bg-body rounded" style="margin-top: -20px;"> <!-- tabla datos de donaciones -->
+        <a href="{% url 'generate_pdf' %}" class="btn btn-danger">Generar PDF</a>
+        <br>
+        <table class="table shadow p-3 mb-5 bg-body rounded" > <!-- tabla datos de donaciones -->
             <thead>
                 <tr class="bg-dark text-white">
                     <th class="text-center border">Tipo de prenda</th>

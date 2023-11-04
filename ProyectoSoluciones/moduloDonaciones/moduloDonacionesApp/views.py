@@ -9,16 +9,86 @@ from .forms import DonForm
 from django import forms
 from datetime import date , datetime
 from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
+
+#Conexión a base de datos firebase
+def connectDB():
+    if not firebase_admin._apps:
+        cred = credentials.Certificate("../modulodonaciones-firebase-adminsdk-zvcs8-3e5c71d008.json")
+        firebase_admin.initialize_app(cred, {
+            "databaseURL": "https://modulodonaciones-default-rtdb.firebaseio.com",
+            "storageBucket": "modulodonaciones.appspot.com"
+        })
+
+    dbconn = db.reference("Data")
+    return dbconn 
 
 
 #Render Navbar
 def renderNavbar(request):
     return render(request, 'template/donaciones.html')
 
+#Generar pdf
+@login_required
+def generate_pdf(request):
+    user_id = request.user.id  # Obtén el ID del usuario o ajusta esta lógica según tus necesidades
+
+    # Obtiene los datos de la variable de sesión
+    general_donaciones = request.session.get('general_donaciones', [])
+
+    # Crea la respuesta HTTP para el PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="historial.pdf"'
+
+    # Crea un objeto PDF con ReportLab
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Define los estilos de la tabla
+    styles = getSampleStyleSheet()
+    style_table = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ])
+
+    # Crea la tabla de historial de donaciones
+    data = [['Tipo de prenda', 'Talla', 'Estado', 'Detalle', 'Imagen', 'Estado Respuesta','Fecha']]
+    for donation in general_donaciones:
+        data.append([
+            donation.get('tipo_prenda', 'Sin información'),
+            donation.get('talla', 'Sin información'),
+            donation.get('estado', 'Sin información'),
+            donation.get('detalle', 'Sin información'),
+            'Imagen solo en la web',  # Puedes agregar un enlace para abrir la imagen, si lo deseas
+            donation.get('estadoR', 'Sin información'),
+            donation.get('fecha', 'Sin información')
+        ])
+
+    table = Table(data)
+    table.setStyle(style_table)
+
+    elements.append(Paragraph(f"Historial de Donaciones", styles['Title']))
+    elements.append(table)
+
+    # Agrega una página en blanco (o salto de página) al final
+    elements.append(PageBreak())
+
+    # Construye el PDF
+    doc.build(elements)
+
+    return response
+
+#Carga solicitudes especificas por id de usuario presionado
 def renderHistorial(request, user_id):
     users = []
     db_ref = connectDB()
@@ -32,6 +102,7 @@ def renderHistorial(request, user_id):
 
     return render(request, 'template/historial.html', {"users": users})
 
+#Listar todas las donaciones /historial_don, requiere estar logueado
 @login_required
 def renderHistorialGeneral(request):
     general_donaciones = []
@@ -61,23 +132,11 @@ def renderHistorialGeneral(request):
             search_term in estadoR or
             search_term in fecha):
                 general_donaciones.append(donation_data)
+
+                request.session['general_donaciones'] = general_donaciones
+
     
     return render(request, 'template/historial_general.html', {"donations": general_donaciones, "search_term": search_term})
-
-
-
-
-#Conexión a base de datos firebase
-def connectDB():
-    if not firebase_admin._apps:
-        cred = credentials.Certificate("../modulodonaciones-firebase-adminsdk-zvcs8-3e5c71d008.json")
-        firebase_admin.initialize_app(cred, {
-            "databaseURL": "https://modulodonaciones-default-rtdb.firebaseio.com",
-            "storageBucket": "modulodonaciones.appspot.com"
-        })
-
-    dbconn = db.reference("Data")
-    return dbconn 
 
 #Listar usuarios en /formUsuario
 @login_required
