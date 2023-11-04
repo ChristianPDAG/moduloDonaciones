@@ -32,21 +32,40 @@ def renderHistorial(request, user_id):
 
     return render(request, 'template/historial.html', {"users": users})
 
+@login_required
 def renderHistorialGeneral(request):
-    users = []
+    general_donaciones = []
     db_ref = connectDB()
     tblUsers = db_ref.get()
 
+    search_term = request.POST.get('search_term', '')  # Obtener el término de búsqueda desde la URL
+
     for key, value in tblUsers.items():
-        user_info = {
+        user_donations = value.get("donaciones", [])
+        for donation_id in user_donations:
+            donation_data = user_donations[donation_id]
             
-            "donaciones": value.get("donaciones", [])
-        }
+            # Obtiene valores
+            tipo_prenda = donation_data.get("tipo_prenda", "")
+            estado = donation_data.get("estado", "")
+            talla = donation_data.get("talla", "")
+            detalle = donation_data.get("detalle", "")
+            estadoR = donation_data.get("estadoR", "")
+            fecha = donation_data.get("fecha", "")
+
+            # Realizar la búsqueda en los datos de donación
+            if (search_term in tipo_prenda or
+            search_term in estado or
+            search_term in talla or
+            search_term in detalle or
+            search_term in estadoR or
+            search_term in fecha):
+                general_donaciones.append(donation_data)
     
+    return render(request, 'template/historial_general.html', {"donations": general_donaciones, "search_term": search_term})
 
-    users.append(user_info)
 
-    return render(request, 'template/historial_general.html', {"users": users})
+
 
 #Conexión a base de datos firebase
 def connectDB():
@@ -162,7 +181,7 @@ def addDon(request, user_id):
                 "talla": talla,
                 "detalle": detalle,
                 "img": img_url, # Almacena la ruta del archivo en Firebase Storage
-                "estado": "En proceso",
+                "estadoR": "En proceso",
                 "fecha": ddtt  
             })
 

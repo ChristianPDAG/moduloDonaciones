@@ -29,7 +29,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:logout' %}" style="padding-right: 20px; color: #000000A6;">CERRAR SESIÓN</a>
-                    </li>
+                    </li> </ul>
+                    <form class="d-flex" method="post" action="{% url 'historial_don' %}">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" name="search_term" placeholder="Filtro de búsqueda" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Filtrar</button>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -43,47 +48,46 @@
                     <th class="text-center border">Estado</th>
                     <th class="text-center border">Detalle</th>
                     <th class="text-center border">Imagen</th>
-                    <th class="text-center border">Estado</th>
+                    <th class="text-center border">Estado respuesta</th>
                     <th class="text-center border">Fecha</th>
 
 
                 </tr>
             </thead>
             <tbody>
-                {% for user in users %}
-                    {% for donacion_key, donacion_value in user.donaciones.items %}
-                        <tr class="bg-secondary text-white" >
-                            <td class="border">{{ donacion_value.tipo_prenda|default:"Sin información" }}</td>
-                            <td class="border">{{ donacion_value.talla|default:"Sin información" }}</td>
-                            <td class="border">{{ donacion_value.estado|default:"Sin información" }}</td>
-                            <td class="border">{{ donacion_value.detalle|default:"Sin información" }}</td>
-                            <td class="border">
-                                <!-- Agrega un enlace para abrir la imagen en grande -->
-                                <a href="#!" data-bs-toggle="modal" data-bs-target="#imagenModal{{ donacion_key}}">
-                                    <img src="{{ donacion_value.img }}" alt="Imagen" class="img-fluid" width="30" height="30">
-                                </a>
-                            </td>
-                            <td class="border">{{ donacion_value.estado|default:"Sin información" }}</td>
-                            <td class="border">{{ donacion_value.fecha|default:"Sin información" }}</td>
-                        </tr>
-                        <!---Ventana Modal de bootstrap, muestra en grande la imagen al presionarla-->
-                        <div class="modal fade" id="imagenModal{{ donacion_key }}" tabindex="-1" role="dialog" aria-labelledby="imagenModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="imagenModalLabel">Presione afuera para salir</h5>
-                                        
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="{{ donacion_value.img }}" alt="Imagen en grande" class="img-fluid">
-                                    </div>
+                {% for donation in donations %}
+                    <tr class="bg-secondary text-white">
+                        <td class="border">{{ donation.tipo_prenda|default:"Sin información" }}</td>
+                        <td class="border">{{ donation.talla|default:"Sin información" }}</td>
+                        <td class="border">{{ donation.estado|default:"Sin información" }}</td>
+
+                        <td class="border">{{ donation.detalle|default:"Sin información" }}</td>
+                        <td class="border">
+                            <!-- Agrega un enlace para abrir la imagen en grande -->
+                            <a href="#!" data-bs-toggle="modal" data-bs-target="#imagenModal{{ forloop.counter }}">
+                                <img src="{{ donation.img }}" alt="Imagen" class="img-fluid" width="30" height="30">
+                            </a>
+                        </td>
+                        <td class="border">{{ donation.estadoR|default:"Sin información" }}</td>
+                        <td class="border">{{ donation.fecha|default:"Sin información" }}</td>
+                    </tr>
+                    <!---Ventana Modal de bootstrap, muestra en grande la imagen al presionarla-->
+                    <div class="modal fade" id="imagenModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="imagenModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imagenModalLabel">Presione afuera para salir</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{ donation.img }}" alt="Imagen en grande" class="img-fluid">
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                    
+                    </div>
                 {% endfor %}
             </tbody>
+            </table>
+            
         </table>
     </div>
 <body>

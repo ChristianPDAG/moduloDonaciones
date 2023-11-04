@@ -28,7 +28,7 @@ urlpatterns = [
     path("formDonacion/<str:user_id>/", addDon, name = 'form_donaciones'),
     path("navbar/", renderNavbar),
     path("historial/<str:user_id>/",renderHistorial, name='ver_donaciones'),
-    path("historial_don/", renderHistorialGeneral),
+    path("historial_don/", renderHistorialGeneral, name='historial_don'),
 
 
 
