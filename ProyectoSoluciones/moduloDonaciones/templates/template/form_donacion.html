@@ -79,6 +79,7 @@
                 <label for="tipo_prenda">Tipo de Prenda</label>
                 <select class="form-control" name="tipo_prenda" id="tipo_prenda" style="margin-bottom: 10px;">
                     <option value="Chaqueta">Chaqueta</option>
+                    <option value="Calcetines">Calcetines</option>
                     <option value="Pantalón">Pantalón</option>
                     <option value="Polera">Polera</option>
                     <option value="Polerón">Polerón</option>
@@ -91,6 +92,7 @@
                 <select class="form-control" name="estado" id="estado" style="margin-bottom: 10px;">
                     <option value="Nuevo">Nuevo</option>
                     <option value="Poco uso">Poco uso</option>
+                    <option value="Medianamente usado">Medianamente usado</option>
                     <option value="Muy usado">Muy usado</option>
                 </select>
             </div>
@@ -114,7 +116,6 @@
                 <input type="file" class="form-control" name="img" id="img" style="margin-bottom: 20px;">
             </div>
             <input type="image" src="{% static 'img/Nono guardar.png' %}" style="height: 250px;" alt="Guardar" class="submit-nono">
-            <button type="submit" class="btn btn-primary" >Guardar</button>
             <a href="/" ><input type="image" src="{% static 'img\Nono Cancelar Boton.png' %}" style="height: 250px;" alt="Cancelar" class="submit-nono"/></a>
         </form>
     </div>
