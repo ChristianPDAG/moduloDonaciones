@@ -8,7 +8,7 @@ from .forms import UserForm
 from .forms import DonForm
 from django import forms
 from datetime import date , datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
@@ -28,15 +28,10 @@ def connectDB():
     dbconn = db.reference("Data")
     return dbconn 
 
-
-#Render Navbar
-def renderNavbar(request):
-    return render(request, 'template/donaciones.html')
-
 #Generar pdf
 @login_required
 def generate_pdf(request):
-    user_id = request.user.id  # Obtén el ID del usuario o ajusta esta lógica según tus necesidades
+    user_id = request.user.id  # Obtén el ID del usuario 
 
     # Obtiene los datos de la variable de sesión
     general_donaciones = request.session.get('general_donaciones', [])
@@ -100,7 +95,9 @@ def renderHistorial(request, user_id):
 
     users.append(user_info)
 
-    return render(request, 'template/historial.html', {"users": users})
+    return render(request, 'template/historial.html', {"user_id":user_id, "users": users})
+
+
 
 #Listar todas las donaciones /historial_don, requiere estar logueado
 @login_required
@@ -135,7 +132,6 @@ def renderHistorialGeneral(request):
 
                 request.session['general_donaciones'] = general_donaciones
 
-    
     return render(request, 'template/historial_general.html', {"donations": general_donaciones, "search_term": search_term})
 
 #Listar usuarios en /formUsuario
@@ -214,7 +210,6 @@ def addDon(request, user_id):
             #Subir la imagen a Firebase Storage
             if img:
                 img_path = f'{user_id}_{tipo_prenda}_{estado}_{talla}_{detalle}.jpg'
-                print(img_path)
                 bucket = storage.bucket()
                 blob = bucket.blob(img_path)
                 try:
@@ -243,6 +238,8 @@ def addDon(request, user_id):
                 "estadoR": "En proceso",
                 "fecha": ddtt  
             })
+
+            ## AQUI QUIERO AGREGAR LA LOGICA PARA ACTUALIZAR EL "estadoR"
 
             return redirect('form_donaciones', user_id)
         else:

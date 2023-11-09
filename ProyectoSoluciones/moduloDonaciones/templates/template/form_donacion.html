@@ -65,15 +65,9 @@
     <img src="{% static 'img/nono.webp' %}" style="float: right; margin-top: 80px; transform: rotate(-20deg);">
     <img src="{% static 'img/tijeras.png' %}" style="height: 250px; float: left; margin-top: 40px; transform: rotate(50deg);">
     <img src="{% static 'img/boton.png' %}" style="height: 100px; float: left; margin-top: 200px;">
-    
 
     <div class="container-form" style="margin-right: 400px; margin-left: 400px; margin-top: 30px;">
         <form action="" method = "POST" enctype="multipart/form-data">{% csrf_token %}
-            <!-- {% if error_message %}
-                    <div class="alert alert-danger">
-                        {{ error_message }}
-                    </div>
-                {% endif %}-->
 
             <div class="form-group row">
                 <label for="tipo_prenda">Tipo de Prenda</label>

@@ -29,9 +29,6 @@ urlpatterns = [
     path("navbar/", renderNavbar),
     path("historial/<str:user_id>/",renderHistorial, name='ver_donaciones'),
     path("historial_don/", renderHistorialGeneral, name='historial_don'),
-    path('generate_pdf/', generate_pdf, name='generate_pdf')
-
-
-
+    path('generate_pdf/', generate_pdf, name='generate_pdf'),
 
 ]

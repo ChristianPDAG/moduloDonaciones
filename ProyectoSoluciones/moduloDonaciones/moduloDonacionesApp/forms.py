@@ -20,6 +20,9 @@ class UserForm(forms.ModelForm):
         self.fields['nombre'].error_messages = {
             'required': 'Este campo es obligatorio'
         }
+        self.fields['apellido'].error_messages = {
+            'required': 'Este campo es obligatorio'
+        }
 
 #Formulario Donaciones
 class DonForm(forms.ModelForm):

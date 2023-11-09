@@ -63,8 +63,12 @@
                                 </a>
                             </td>
                             <td class="border">
-                                <button class="btn btn-success" style="margin-left: 20%;">Aceptar</button>         
-                                <button class="btn btn-danger" style="margin-left: 20%;">Rechazar</button>    
+                                <div id="estadoR-{{ donacion_key }}">
+                                    <button class="btn btn-success aceptar-button" data-donacion-id="{{ donacion_key }}" data-user-id="{{ user_id }}">Aceptar</button>
+                                    <button class="btn btn-danger rechazar-button" data-donacion-id="{{ donacion_key }}" data-user-id="{{ user_id }}">Rechazar</button>
+                                    <input type="hidden" id="user-id" value="{{ user_id }}"><!--esta linea es importante dado que es la que llama al id del user-->
+                                </div>
+                                
                             </td>
                         </tr>
                         <!---Ventana Modal de bootstrap, muestra en grande la imagen al presionarla-->
@@ -94,4 +98,78 @@
     </div>
     <img src="{% static 'img/nono.webp' %}" style="float: right; margin-top: 80px; transform: rotate(-20deg);">
     <img src="{% static 'img/tijeras.png' %}" style="height: 250px; float: left; margin-top: 40px; transform: rotate(50deg);">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            // Llama a la BD
+                const firebaseConfig = {
+                    apiKey: "AIzaSyA4-ekR2f9EQduoL1PIlBxKbz3VsJuvvxY",
+                    authDomain: "modulodonaciones.firebaseapp.com",
+                    databaseURL: "https://modulodonaciones-default-rtdb.firebaseio.com",
+                    projectId: "modulodonaciones",
+                    storageBucket: "modulodonaciones.appspot.com",
+                    messagingSenderId: "589893215690",
+                    appId: "1:589893215690:web:7f275204444745b0061b33",
+                    measurementId: "G-42P8DNHJSB"
+                    };
+                console.log("Inicialización de Firebase")
+                var app = firebase.initializeApp(firebaseConfig);
+
+                $(".aceptar-button, .rechazar-button").click(function() {
+                var donacionId = $(this).data('donacion-id');
+                var userId = $("#user-id").val();
+                var estadoRId = "#estadoR-" + donacionId;
+
+
+                console.log("Donación ID:", donacionId);
+                console.log("Usuario ID:", userId);
+
+                // Obtiene una referencia a la donación específica
+                var donacionRef = app.database().ref('Data/' + userId + '/donaciones/' + donacionId);
+
+                if ($(this).hasClass('aceptar-button')) {
+                    // Actualiza el campo "estadoR" para aceptar la donación
+                    donacionRef.update({
+                    "estadoR": "Aceptado"
+                    });
+                } else {
+                    // Actualiza el campo "estadoR" para rechazar la donación
+                    donacionRef.update({
+                    "estadoR": "Rechazado"
+                    });
+                }
+
+                $(this).hide();
+                $(estadoRId).text($(this).hasClass('aceptar-button') ? "Aceptado" : "Rechazado").show();
+
+                // Guarda el estado de ocultación de los botones en el almacenamiento local
+                localStorage.setItem(`estadoBotones-${donacionId}`, 'oculto');
+                // Guarda el valor de estadoR en el almacenamiento local
+                localStorage.setItem(`estadoR-${donacionId}`, $(this).hasClass('aceptar-button') ? "Aceptado" : "Rechazado");
+            });
+
+            // Verifica el estado al cargar la página
+            $(".aceptar-button, .rechazar-button").each(function() {
+                var donacionId = $(this).data('donacion-id');
+                var estadoRId = "#estadoR-" + donacionId;
+
+                // Verifica el estado de ocultación de los botones
+                if (localStorage.getItem(`estadoBotones-${donacionId}`) === 'oculto') {
+                    $(this).hide();
+                }
+
+                // Verifica el valor de estadoR y muestra el estado correspondiente
+                var estadoRValue = localStorage.getItem(`estadoR-${donacionId}`);
+                if (estadoRValue) {
+                    $(estadoRId).text(estadoRValue).show();
+                }
+
+                    });
+                }); 
+    </script>
+
 <body>
