@@ -18,7 +18,7 @@ from django.urls import path , include
 from moduloDonacionesApp.views import renderFormUs
 from moduloDonacionesApp.views import addUs
 from moduloDonacionesApp.views import addDon
-from moduloDonacionesApp.views import renderNavbar , renderHistorial, renderHistorialGeneral, generate_pdf
+from moduloDonacionesApp.views import  renderHistorial, renderHistorialGeneral, generate_pdf
 
 
 urlpatterns = [
@@ -26,7 +26,6 @@ urlpatterns = [
     path("formUsuario/", renderFormUs, name = 'Form_Usuarios'),
     path("formUsuario2/", addUs),
     path("formDonacion/<str:user_id>/", addDon, name = 'form_donaciones'),
-    path("navbar/", renderNavbar),
     path("historial/<str:user_id>/",renderHistorial, name='ver_donaciones'),
     path("historial_don/", renderHistorialGeneral, name='historial_don'),
     path('generate_pdf/', generate_pdf, name='generate_pdf'),
