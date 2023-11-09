@@ -30,7 +30,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'admin:logout' %}" style="padding-right: 20px; color: #000000A6;">CERRAR SESIÓN</a>
                     </li> </ul>
-                    <form class="d-flex" method="post" action="{% url 'historial_don' %}">
+                    <form class="d-flex" method="post" action="{% url 'historial_don' %}" style="margin-top: 20px; margin-left: 20px;">
                         {% csrf_token %}
                         <input class="form-control me-2" type="search" name="search_term" placeholder="Filtro de búsqueda" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Filtrar</button>
