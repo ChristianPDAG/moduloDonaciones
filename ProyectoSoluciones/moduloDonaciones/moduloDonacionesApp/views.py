@@ -14,7 +14,10 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
+from django.contrib.auth.decorators import user_passes_test
 
+def is_special_user(user):
+    return user.groups.filter(name='GODS').exists()
 
 #Conexión a base de datos firebase
 def connectDB():
@@ -83,7 +86,7 @@ def generate_pdf(request):
 
     return response
 
-#Carga solicitudes especificas por id de usuario presionado
+@user_passes_test(is_special_user, login_url='/admin/login/')
 def renderHistorial(request, user_id):
     users = []
     db_ref = connectDB()
@@ -100,7 +103,7 @@ def renderHistorial(request, user_id):
 
 
 #Listar todas las donaciones /historial_don, requiere estar logueado
-@login_required
+@user_passes_test(is_special_user, login_url='/admin/login/')
 def renderHistorialGeneral(request):
     general_donaciones = []
     db_ref = connectDB()
