@@ -20,16 +20,6 @@ def is_special_user(user):
     return user.groups.filter(name='GODS').exists()
 
 #Conexión a base de datos firebase
-def connectDB():
-    if not firebase_admin._apps:
-        cred = credentials.Certificate("../modulodonaciones-firebase-adminsdk-zvcs8-3e5c71d008.json")
-        firebase_admin.initialize_app(cred, {
-            "databaseURL": "https://modulodonaciones-default-rtdb.firebaseio.com",
-            "storageBucket": "modulodonaciones.appspot.com"
-        })
-
-    dbconn = db.reference("Data")
-    return dbconn 
 
 #Generar pdf
 @login_required
